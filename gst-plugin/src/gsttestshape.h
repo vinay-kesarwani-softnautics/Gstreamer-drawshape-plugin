@@ -1,5 +1,10 @@
-/* Copyright 2005 Thomas Vander Stichele <thomas@apestaart.org>
- *
+/*
+ * GStreamer
+ * Copyright (C) 2005 Thomas Vander Stichele <thomas@apestaart.org>
+ * Copyright (C) 2005 Ronald S. Bultje <rbultje@ronald.bitfreak.net>
+ * Copyright (C) 2020 Niels De Graef <niels.degraef@gmail.com>
+ * Copyright (C) 2023 Vinay Kesarwani <<user@hostname.org>>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -39,4 +44,35 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "play.h"
+#ifndef __GST_TESTSHAPE_H__
+#define __GST_TESTSHAPE_H__
+
+#include <gst/gst.h>
+
+G_BEGIN_DECLS
+
+#define GST_TYPE_TESTSHAPE (gst_testshape_get_type())
+
+G_DECLARE_FINAL_TYPE (Gsttestshape, gst_testshape, GST, TESTSHAPE, GstElement)
+
+typedef struct _Gsttestshape Gsttestshape;
+
+struct _Gsttestshape
+{
+	GstElement element;
+	GstPad *sinkpad, *srcpad;
+	gchar color[10];
+	gchar shape[15];
+	gint x,y;
+	gboolean coordinate;
+	gint rect_l;
+	gint rect_h;
+	gint triangle_size;
+	gint square_size;
+	gint circle_radius;
+};
+
+G_END_DECLS
+
+#endif /* __GST_TESTSHAPE_H__ */
+

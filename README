@@ -1,0 +1,44 @@
+# GStreamer Custom Plugin: testshape
+
+# Task:
+To develop a custom GStreamer plugin that adds static shapes, such as rectangles, triangles, squares (optional: circles), to incoming RAW
+video frames. 
+The plugin will support drawing shapes in three different colors: red, blue, and green. 
+The resulting modified frames will then be passed to the next element in the GStreamer pipeline. 
+The input video format for the plugin will be video/x-raw with the following specifications: 
+-Format: NV12
+-Resolution: 720p/480p
+-Framerate: 24fps
+
+
+*****Steps to run the custom plugin*****
+
+# Compilation Steps:
+$ meson build      //run from parent directory.
+$ ninja -C build
+
+# Loading the Plugin:
+- .so file will be created in /build/gst-plugin directory, need to add this plugin in gstreamer library directory.
+$ sudo cp .so/FILE/PATH /usr/lib/x86_64-linux-gnu/gstreamer-1.0
+
+-OR else to load plugin you can follow below step:
+$ sudo ninja -C build install
+$ export GST_PLUGIN_PATH=/usr/local/lib/x86_64-linux-gnu/gstreamer-1.0 
+- Note: By default meson will choose /usr/local as a default location. One would need to add /usr/local/lib/gstreamer-1.0 to GST_PLUGIN_PATH in order to make the new plugin show up in a gstreamer that's been installed from packages.
+
+# Verify Plugin: 
+-After the plugin is loaded, you can inspect it using the following command:
+$ gst-inspect-1.0 testshape
+
+# Using the Plugin:
+-To use the testshape plugin in your GStreamer pipeline, you have the following two options:
+
+1.Default Configuration:
+    -The default color is set to red with default shape as square, positioned in the center of the frame.
+    $ gst-launch-1.0 -v videotestsrc ! video/x-raw, format=NV12, width=1280, height=720, framerate=24/1 ! testshape ! autovideosink
+
+2.Custom Configuration:
+    -You can customize the configuration of testshape by modifying its properties. 
+    -First, set coordinate=true, then adjust the shape-specific properties (e.g., rect_h, rect_l, square_size, triangle_size, circle_radius), and    specify the coordinates x and y for the shape.
+    $ gst-launch-1.0 -v videotestsrc ! video/x-raw, format=NV12, width=1280, height=1024, framerate=30/1 ! testshape coordinate=true color=blue shape=triangle triangle_size=30 x=300 y=100 ! autovideosink
+
